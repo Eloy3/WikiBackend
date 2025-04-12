@@ -13,9 +13,13 @@ public class SidebarController : ControllerBase
 
     public SidebarController(IConfiguration config)
     {
+        
         var url = config["Supabase:Url"] ?? throw new InvalidOperationException("Missing Supabase:Url in configuration");
         var key = config["Supabase:Key"] ?? throw new InvalidOperationException("Missing Supabase:Key in configuration");
 
+        Console.log($"Supabase URL: {url}");
+        Console.log($"Supabase Key: {key}");
+        
         _supabase = new Supabase.Client(url, key, new SupabaseOptions { AutoConnectRealtime = false });
         _supabase.InitializeAsync().Wait();
     }
