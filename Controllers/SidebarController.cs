@@ -13,9 +13,8 @@ public class SidebarController : ControllerBase
 
     public SidebarController(IConfiguration config)
     {
-        
-        var url = config["Supabase:Url"] ?? throw new InvalidOperationException("Missing Supabase:Url in configuration");
-        var key = config["Supabase:Key"] ?? throw new InvalidOperationException("Missing Supabase:Key in configuration");
+        var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? throw new InvalidOperationException("Missing Supabase:Url in configuration");
+        var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") ?? throw new InvalidOperationException("Missing Supabase:Key in configuration");
 
         Console.WriteLine($"Supabase URL: {url}");
         Console.WriteLine($"Supabase Key: {key}");
