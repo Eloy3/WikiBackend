@@ -8,8 +8,6 @@ public class PageService
 
     public PageService(IConfiguration config)
     {
-        Console.WriteLine($"Supabase URL via env: {Environment.GetEnvironmentVariable("SUPABASE_URL")}");
-        Console.WriteLine($"Supabase URL via config: {config["Supabase:Url"]}");
         var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? config["Supabase:Url"] ?? throw new ArgumentNullException("Supabase URL cannot be null.");
         var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") ?? config["Supabase:Key"];
         var options = new SupabaseOptions { AutoConnectRealtime = false };
