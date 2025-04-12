@@ -13,10 +13,31 @@ public class SidebarController : ControllerBase
 
     public SidebarController(IConfiguration config)
     {
-        var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? config["Supabase:Url"] ?? throw new InvalidOperationException("Missing Supabase:Url in configuration");
-        var key = config["Supabase:Key"] ?? throw new InvalidOperationException("Missing Supabase:Key in configuration");
+        // Log both ENV and config sources for visibility in Railway logs
+        var envUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
+        var configUrl = config["Supabase:Url"];
+        var configKey = config["Supabase:Key"];
+        var envKey = Environment.GetEnvironmentVariable("SUPABASE_KEY");
 
-        _supabase = new Supabase.Client(url, key, new SupabaseOptions { AutoConnectRealtime = false });
+        Console.WriteLine($"🔍 ENV SUPABASE_URL: {envUrl}");
+        Console.WriteLine($"🔍 CONFIG Supabase:Url: {configUrl}");
+        Console.WriteLine($"🔍 ENV SUPABASE_KEY present: {!string.IsNullOrEmpty(envKey)}");
+        Console.WriteLine($"🔍 CONFIG Supabase:Key present: {!string.IsNullOrEmpty(configKey)}");
+
+        var url = envUrl ?? configUrl ?? throw new InvalidOperationException("Missing Supabase:Url");
+        var key = envKey ?? configKey ?? throw new InvalidOperationException("Missing Supabase:Key");
+
+        var options = new SupabaseOptions
+        {
+            AutoConnectRealtime = false,
+            Headers = new Dictionary<string, string>
+            {
+                { "apikey", key },
+                { "Authorization", $"Bearer {key}" }
+            }
+        };
+
+        _supabase = new Supabase.Client(url, key, options);
         _supabase.InitializeAsync().Wait();
     }
 
