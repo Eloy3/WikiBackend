@@ -13,19 +13,14 @@ public class SidebarController : ControllerBase
 
     public SidebarController(IConfiguration config)
     {
-        // Log both ENV and config sources for visibility in Railway logs
         var envUrl = Environment.GetEnvironmentVariable("SUPABASE_URL");
-        var configUrl = config["Supabase:Url"];
-        var configKey = config["Supabase:Key"];
         var envKey = Environment.GetEnvironmentVariable("SUPABASE_KEY");
 
         Console.WriteLine($"🔍 ENV SUPABASE_URL: {envUrl}");
-        Console.WriteLine($"🔍 CONFIG Supabase:Url: {configUrl}");
         Console.WriteLine($"🔍 ENV SUPABASE_KEY present: {!string.IsNullOrEmpty(envKey)}");
-        Console.WriteLine($"🔍 CONFIG Supabase:Key present: {!string.IsNullOrEmpty(configKey)}");
 
-        var url = envUrl ?? configUrl ?? throw new InvalidOperationException("Missing Supabase:Url");
-        var key = envKey ?? configKey ?? throw new InvalidOperationException("Missing Supabase:Key");
+        var url = envUrl ?? throw new InvalidOperationException("Missing Supabase:Url");
+        var key = envKey ?? throw new InvalidOperationException("Missing Supabase:Key");
 
         var options = new SupabaseOptions
         {
