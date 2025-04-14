@@ -15,9 +15,6 @@ public class SidebarController : ControllerBase
     {
         var url = Environment.GetEnvironmentVariable("SUPABASE_URL") ?? throw new InvalidOperationException("Missing Supabase:Url in configuration");
         var key = Environment.GetEnvironmentVariable("SUPABASE_KEY") ?? throw new InvalidOperationException("Missing Supabase:Key in configuration");
-
-        Console.WriteLine($"Supabase URL: {url}");
-        Console.WriteLine($"Supabase Key: {key}");
         
         _supabase = new Supabase.Client(url, key, new SupabaseOptions { AutoConnectRealtime = false });
         _supabase.InitializeAsync().Wait();
